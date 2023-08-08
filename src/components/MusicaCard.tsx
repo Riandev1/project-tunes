@@ -1,4 +1,5 @@
 import { SongType } from '../types';
+import './style.css';
 
 function MusicCard({ trackName, previewUrl }: SongType) {
   return (

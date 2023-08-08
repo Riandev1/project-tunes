@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getUser } from '../services/userAPI';
+import './style.css';
 
 function Header() {
   const [loading, setLogin] = useState(false);

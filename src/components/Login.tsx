@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
+import './style.css';
 
 export default function Login() {
   const [button, setButton] = useState<boolean>(false);
