@@ -2,53 +2,49 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
 
-function Login() {
-  const [loginText, setLoginText] = useState('');
-  const [submitBtn, setSubmitBtn] = useState(true);
-  const [loading, setLoading] = useState(false);
+export default function Login() {
+  const [button, setButton] = useState<boolean>(false);
+  const [name, setName] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setLoginText(event.target.value);
-    if (event.target.value.length >= 3) {
-      setSubmitBtn(false);
-    }
-  }
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value;
+    setName(newName);
+    setButton(newName.length >= 3);
+  };
 
-  async function createUsrLoadingScreen() {
-    await createUser({ name: loginText });
-    navigate('/search');
-  }
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const handleClick = async () => {
     setLoading(true);
-    await createUsrLoadingScreen();
-  }
+    createUser({ name })
+      .then(() => {
+        setName('');
+        setLoading(false);
+        navigate('/search');
+      });
+  };
 
   if (loading) {
     return <p>Carregando...</p>;
   }
 
   return (
-    <form onSubmit={ handleSubmit }>
-      <label htmlFor="login">
-        <input
-          id="login"
-          type="text"
-          data-testid="login-name-input"
-          onChange={ handleChange }
-        />
-      </label>
+    <>
+      <input
+        type="text"
+        data-testid="login-name-input"
+        placeholder="Insira seu nome"
+        value={ name }
+        onChange={ handleNameChange }
+      />
       <button
-        type="submit"
         data-testid="login-submit-button"
-        disabled={ submitBtn }
+        disabled={ !button }
+        onClick={ handleClick }
       >
         Entrar
       </button>
-    </form>
+    </>
   );
 }
-
-export default Login;
